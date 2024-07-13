@@ -4,18 +4,26 @@ function List() {
   const [movies, setMovies] = useState([]);
   const [query, setQuery] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  const [found, setFound] = useState("Search");
   useEffect(() => {
-    axios(`https://www.omdbapi.com/?s=${query}&apikey=c3bc9fae`)
-      .then((response) => {
-        if (response.data.Search && response.data) {
-          setMovies(response.data.Search);
-        } else {
-          setMovies([]);
-        }
-      })
-      .catch((e) => console.log(e));
+    if (query) {
+      setLoading(true);
+      axios(`https://www.omdbapi.com/?s=${query}&apikey=c3bc9fae`)
+        .then((response) => {
+          if (response.data.Search && response.data) {
+            setMovies(response.data.Search);
+            setFound("");
+          } else {
+            setMovies([]);
+            setFound("Not Found");
+          }
+          setLoading(false);
+        })
+        .catch((e) => console.log(e));
+    }
   }, [query]);
+
   const handleSearch = (e) => {
     e.preventDefault();
     setQuery(searchTerm);
@@ -31,10 +39,13 @@ function List() {
         />
         <button type="submit">Search</button>
       </form>
-
-      {movies.map((movie) => (
-        <div key={movie.imdbID}>{movie.Title}</div>
-      ))}
+      {loading ? (
+        <div>Loading..</div>
+      ) : movies.length > 0 ? (
+        movies.map((movie) => <div key={movie.imdbID}>{movie.Title}</div>)
+      ) : (
+        <p>{found}</p>
+      )}
     </div>
   );
 }
