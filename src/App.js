@@ -1,5 +1,5 @@
 import './App.css';
-import List from './comp/List.js'
+import List from './comp/List.jsx'
 function App() {
   return (
     <div className="App">

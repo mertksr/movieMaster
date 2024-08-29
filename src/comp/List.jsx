@@ -13,6 +13,8 @@ function List() {
         .then((response) => {
           if (response.data.Search && response.data) {
             setMovies(response.data.Search);
+            console.log(response);
+            
             setFound("");
           } else {
             setMovies([]);
@@ -42,8 +44,15 @@ function List() {
       {loading ? (
         <div>Loading..</div>
       ) : movies.length > 0 ? (
-        movies.map((movie) => <div key={movie.imdbID}>{movie.Title}</div>)
-      ) : (
+        <div className="movie-list">
+        {movies.map((movie) => (
+        
+        <div className="movie" key={movie.imdbID}>
+        <img src={movie.Poster} alt="" />
+          {movie.Title}
+          </div>))}
+          </div>
+    ) : (
         <p>{found}</p>
       )}
     </div>
